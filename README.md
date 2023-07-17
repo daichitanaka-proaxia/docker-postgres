@@ -283,7 +283,7 @@ namespace ConnectPostgreSQL
             ConnectService service = new ConnectService();
             try
             {
-                service.GetAllUsers();
+                service.Connect();
             } catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
