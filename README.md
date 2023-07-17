@@ -304,7 +304,7 @@ namespace ConnectPostgreSQL
     {
         public void Connect()
         {
-            var connectionString = "Host=localhost;Port=5432;Database=test;User ID=user2;Password=password;";
+            var connectionString = "Host=localhost;Port=5432;Database=test;User ID=user1;Password=password;";
             var dataSouceBuilder = new NpgsqlDataSourceBuilder(connectionString);
             var dataSource = dataSouceBuilder.Build();
 
