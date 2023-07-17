@@ -1,25 +1,30 @@
 # docker-postgres
 ## 目的
--　Docker を利用してデータベース（PostgreSQLを利用）を構築する手順を確認する
+- Docker を利用してデータベース（PostgreSQLを利用）を構築する手順を確認する
 
 ## 注意事項
 - この作業で構築したデータベースを、**お客様向けシステムに使用しないこと**
 
 ## 前提条件
 - 事前に PC に **Docker Desktop** をインストールしていること
-- **Docker Desktop** の状態が　`Engine Running` になっていること
+- **Docker Desktop** の状態が `Engine Running` になっていること
+
+### Docker Desktop
+https://www.docker.com/products/docker-desktop/
 
 ## 作業のおおまかな流れ
-1. Docker で PostgreSQL のコンテナを立ち上げる
-1. 上記 1. で立ち上げた PostgreSQL のデータベースにデータを投入する
-1. 上記 2. のデータをアプリ （C# で実装） で取得
+1. Docker でコンテナを立ち上げる
+1. データベースにデータを投入する
+1. Docker コンテナを停止・削除
 
-## Docker で PostgreSQL のコンテナを立ち上げる
-```txt:ディレクトリ構成
+## Docker でコンテナを立ち上げる
+### ディレクトリ・ファイル構成
+```txt
 docker-postgres
 └ docker-compose.yml
 ```
 
+### docker-compose.yml
 ```yml:docker-compose.yml
 # docker-composeで使用するバージョンを定義（2022年5月時点では、3.9が最新）
 version: '3.9'
@@ -48,16 +53,17 @@ volumes:
   postgres:
 ```
 
-`docker-postgres` ディレクトリに移動した上で、下記コマンドを実行しコンテナを立ち上げる
+### `docker-postgres` ディレクトリに移動した上で、下記コマンドを実行しコンテナを立ち上げる
 ```
 docker compose up -d
 ```
 
-下記コマンドでコンテナの状況を確認する
-（この時 `CONTAINER ID` の値を覚えておく）
+### 下記コマンドでコンテナの状況を確認する
+この時 `CONTAINER ID` の値を覚えておく
 ```
 docker ps
 ```
+### 上記コマンド実行結果
 ```txt:上記コマンド実行結果
 CONTAINER ID   IMAGE                COMMAND                  CREATED        STATUS        PORTS                    NAMES
 0721f4708e47   postgres:12-alpine   "docker-entrypoint.s…"   26 hours ago   Up 26 hours   0.0.0.0:5432->5432/tcp   postgres
@@ -68,73 +74,84 @@ CONTAINER ID   IMAGE                COMMAND                  CREATED        STAT
 https://zenn.dev/farstep/books/7a6eb67dd3bf1f/viewer/fd9e23
 
 
-## PostgreSQL のデータベースにデータを投入する
-下記コマンドを実行し、コンテナ内に入る
-（`072` の部分は `CONTAINER ID` を入力すること ※`CONTAINER ID` の一部でも良い）
+## データベースにデータを投入する
+### 下記コマンドを実行し、コンテナ内に入る
+`072` の部分は `CONTAINER ID` を入力すること ※`CONTAINER ID` の一部でも良い
 ```
 docker exec -it 072 /bin/bash
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 0721f4708e47:/# 
 ```
 
-ルートユーザでログイン
+### ルートユーザでログイン
 ```
 0721f4708e47:/# psql -U root -d mydb
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 psql (12.15)
 Type "help" for help.
 ```
 
-データベースの作成
+### データベースの作成
 ```
 mydb=# create database test;
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 CREATE DATABASE
 ```
 
-使用するデータベースの変更
+### 使用するデータベースの変更
 ```
 mydb=# \c test;
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 You are now connected to database "test" as user "root".
 ```
 
-テーブルの作成
+### テーブルの作成
 ```
 test=# create table users (id integer,name varchar(10),age integer);
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 CREATE TABLE
 ```
 
-テーブルへのデータ投入
+### テーブルへのデータ投入（1）
 ```
 test=# INSERT INTO users (id, name, age) VALUES (1, 'Mike', 30);
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 INSERT 0 1
 ```
+### テーブルへのデータ投入（2）
 ```
 test=# INSERT INTO users (id, name, age) VALUES (2, 'Lisa', 24);
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 INSERT 0 1
 ```
+### テーブルへのデータ投入（3）
 ```
 test=# INSERT INTO users (id, name, age) VALUES (3, 'Taro', 35);
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 INSERT 0 1
 ```
 
-データの取得
+### データの取得
 ```
 test=# select * from users;
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
  id | name | age 
 ----+------+-----
@@ -144,16 +161,19 @@ test=# select * from users;
 (3 rows)
 ```
 
-PostgreSQL と Docker コンテナから抜ける
+### 下記コマンドで PostgreSQL から抜ける
 ```
 test-# \q
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 0721f4708e47:/# 
 ```
+### 下記 Docker コンテナから抜ける
 ```
 0721f4708e47:/# exit
 ```
+### 上記コマンド実行結果
 ```txt:実行結果
 exit
 ```
@@ -163,35 +183,36 @@ exit
 ```
 docker ps
 ```
+### 上記コマンド実行結果
 ```txt:上記コマンド実行結果
 CONTAINER ID   IMAGE                COMMAND                  CREATED        STATUS        PORTS                    NAMES
 0721f4708e47   postgres:12-alpine   "docker-entrypoint.s…"   26 hours ago   Up 26 hours   0.0.0.0:5432->5432/tcp   postgres
 ```
 
-下記コマンドでコンテナを停止する
+### 下記コマンドでコンテナを停止する
 ```
 docker stop 072
 ```
 
-下記コマンドでコンテナを削除する
+### 下記コマンドでコンテナを削除する
 ```
 docker rm 072
 ```
 
-下記コマンドでコンテナイメージ一覧を表示する
+### 下記コマンドでコンテナイメージ一覧を表示する
 ```
 docker images
 ```
 
-上記コマンド実行結果
-（ここで `IMAGE ID` の値を覚えておく）
+### 上記コマンド実行結果
+ここで `IMAGE ID` の値を覚えておく
 ```
 REPOSITORY   TAG         IMAGE ID       CREATED       SIZE
 postgres     12-alpine   e4d9d6512901   4 weeks ago   230MB
 ```
 
-下記コマンドでコンテナイメージを削除
-（`e4d` は `IMAGE ID` の値 ※`IMAGE ID`の値の一部でも良い）
+### 下記コマンドでコンテナイメージを削除
+`e4d` は `IMAGE ID` の値 ※`IMAGE ID`の値の一部でも良い
 ```
 docker rmi e4d
 ```
@@ -202,11 +223,11 @@ docker rmi e4d
 https://www.javadrive.jp/postgresql/
 
 
-## 〈補足〉C# で実装したアプリを使用してデータを取得
+## C# で実装したアプリを使用してデータを取得
 **参考にした資料**
-
 https://itsakura.com/csharp-postgresql-select
 
+### コード
 ```Csharp:Program.cs
 using System;
 using Npgsql; // NuGet を利用して導入
@@ -259,7 +280,7 @@ namespace ConnectPostgreSQL
 
 ```
 
-## アプリ （C#） 実行結果
+### アプリ （C#） 実行結果
 ```
 1:Mike:30
 2:Lisa:24
