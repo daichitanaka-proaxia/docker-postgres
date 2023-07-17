@@ -269,6 +269,7 @@ https://www.javadrive.jp/postgresql/
 https://itsakura.com/csharp-postgresql-select
 
 ### コード
+#### Program.cs
 ```Csharp:Program.cs
 using System;
 using Npgsql; // NuGet を利用して導入
@@ -289,10 +290,19 @@ namespace ConnectPostgreSQL
             }
         }
     }
+}
+```
 
-    class ConnectService
+#### ConnectService.cs
+```Csharp:ConnectService.cs
+using System;
+using Npgsql;
+
+namespace ConnectPostgreSQL
+{
+    public class ConnectService
     {
-        public async void GetAllUsers()
+        public void Connect()
         {
             var connectionString = "Host=localhost;Port=5432;Database=test;User ID=user2;Password=password;";
             var dataSouceBuilder = new NpgsqlDataSourceBuilder(connectionString);
@@ -300,11 +310,11 @@ namespace ConnectPostgreSQL
 
             var command = dataSource.CreateCommand("SELECT * FROM users");
             var reader = command.ExecuteReader();
-            
+
             while (reader.Read())
-             {
+            {
                 Console.WriteLine($"{reader["id"]} : {reader["name"]} : {reader["age"]}");
-             }
+            }
         }
     }
 }
