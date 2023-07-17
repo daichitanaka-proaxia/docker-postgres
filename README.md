@@ -4,6 +4,7 @@
 
 ## 注意事項
 - この作業で構築したデータベースを、**お客様向けシステムに使用しないこと**
+- データベースからデータを取得する C# のコードをそのまま **お客様向けシステムに使用しないこと**
 
 ## 前提条件
 - 事前に PC に **Docker Desktop** をインストールしていること
@@ -263,7 +264,7 @@ docker rmi e4d
 https://www.javadrive.jp/postgresql/
 
 
-## 【参考】C# で実装したアプリを使用してデータを取得
+## 【参考】データベースからデータを取得するコード（C＃）
 **参考にした資料**
 https://itsakura.com/csharp-postgresql-select
 
@@ -279,50 +280,39 @@ namespace ConnectPostgreSQL
         static void Main(string[] args)
         {
             ConnectService service = new ConnectService();
-            service.Connect();
-        }
-    }
-
-     class ConnectService
-    {
-         public void Connect()
-        {
-            string sql = "SELECT * FROM Users";
-            string ConnectionString = "Server=localhost;"
-                + "Port=5432;"
-                + "Database=test;"
-                + "User ID=root;"
-                + " Password=secret;";
-
-             try
+            try
             {
-                using (var connection = new NpgsqlConnection(ConnectionString))
-                {
-                    connection.Open();
-                     using( var cmd = new NpgsqlCommand(sql, connection))
-                    {
-                        using ( var reader = cmd.ExecuteReader())
-                        {
-                            while(reader.Read())
-                            {
-                                Console.WriteLine(reader["id"] + ":" + reader["name"] + ":" + reader["age"]);
-                            }
-                        }
-                    }
-                }
-            } catch(Exception e)
+                service.GetAllUsers();
+            } catch (Exception ex)
             {
-                Console.WriteLine(e.Message.ToString());
+                Console.WriteLine(ex.Message);
             }
         }
     }
-}
 
+    class ConnectService
+    {
+        public async void GetAllUsers()
+        {
+            var connectionString = "Host=localhost;Port=5432;Database=test;User ID=user2;Password=password;";
+            var dataSouceBuilder = new NpgsqlDataSourceBuilder(connectionString);
+            var dataSource = dataSouceBuilder.Build();
+
+            var command = dataSource.CreateCommand("SELECT * FROM users");
+            var reader = command.ExecuteReader();
+            
+            while (reader.Read())
+             {
+                Console.WriteLine($"{reader["id"]} : {reader["name"]} : {reader["age"]}");
+             }
+        }
+    }
+}
 ```
 
 ### アプリ （C#） 実行結果
 ```
-1:Mike:30
-2:Lisa:24
-3:Taro:35
+1 Mike 30
+2 Lisa 24
+3 Taro 35
 ```
