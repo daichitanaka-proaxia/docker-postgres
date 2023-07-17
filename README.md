@@ -69,8 +69,7 @@ CONTAINER ID   IMAGE                COMMAND                  CREATED        STAT
 0721f4708e47   postgres:12-alpine   "docker-entrypoint.s…"   26 hours ago   Up 26 hours   0.0.0.0:5432->5432/tcp   postgres
 ```
 
-**docker-compose.yml のコード引用先**
-
+### docker-compose.yml のコード引用先
 https://zenn.dev/farstep/books/7a6eb67dd3bf1f/viewer/fd9e23
 
 
@@ -218,8 +217,7 @@ docker rmi e4d
 ```
 
 
-**参考にした資料**
-
+### 参考にした資料
 https://www.javadrive.jp/postgresql/
 
 
