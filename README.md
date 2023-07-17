@@ -112,6 +112,48 @@ mydb=# \c test;
 You are now connected to database "test" as user "root".
 ```
 
+### 下記コマンドでユーザの作成
+`'password'` の値は適宜変更すること
+```
+test=# CREATE USER user1 WITH PASSWORD 'password';
+```
+
+### 上記コマンド実行結果
+```
+CREATE ROLE
+```
+
+### 作成したユーザにデータベースに関する権限を付与
+```
+test=# GRANT ALL PRIVILEGES ON DATABASE test TO user1;
+```
+
+### 上記コマンド実行結果
+```
+GRANT
+```
+
+### 下記コマンドで PostgreSQL から抜ける
+```
+test=# exit
+```
+
+### 上記コマンド実行結果
+```txt:実行結果
+0721f4708e47:/# 
+```
+
+### 作成したユーザでデータベースにログイン
+```txt:実行結果
+0721f4708e47:/# psql -U user1 -d test;
+```
+
+### 上記コマンド実行結果
+```
+psql (12.15)
+Type "help" for help.
+```
+
 ### テーブルの作成
 ```
 test=# create table users (id integer,name varchar(10),age integer);
