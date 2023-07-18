@@ -314,7 +314,7 @@ namespace ConnectPostgreSQL
 
             while (reader.Read())
             {
-                Console.WriteLine($"{reader["id"]} : {reader["name"]} : {reader["age"]}");
+                Console.WriteLine($"{reader["id"]} {reader["name"]} {reader["age"]}");
             }
         }
     }
