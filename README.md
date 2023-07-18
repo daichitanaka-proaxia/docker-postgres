@@ -56,6 +56,7 @@ volumes:
 
 ### `docker-postgres` ディレクトリに移動した上で、下記コマンドを実行しコンテナを立ち上げる
 ```
+cd docker-postgres
 docker compose up -d
 ```
 
