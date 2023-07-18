@@ -266,9 +266,6 @@ https://www.javadrive.jp/postgresql/
 
 
 ## 【参考】データベースからデータを取得するコード（C＃）
-**参考にした資料**
-https://itsakura.com/csharp-postgresql-select
-
 ### コード
 #### Program.cs
 ```Csharp:Program.cs
